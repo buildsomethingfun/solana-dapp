@@ -1,20 +1,20 @@
 publisher:
-  name: actions.FUN
+  name: Something
   address: ''
-  website: https://actions.fun
-  email: actionsdotfun@gmail.com
+  website: https://buildsomething.fun
+  email: m@buildsomething.fun
   media:
     - purpose: icon
       uri: ./media/logo_dark.png
 app:
-  name: actions.FUN
+  name: Something
   address: ''
   android_package: dapp.buildsomething
   urls:
-    license_url: https://actions.fun/terms
-    copyright_url: https://actions.fun/terms
-    privacy_policy_url: https://actions.fun/privacy
-    website: https://actions.fun
+    license_url: https://buildsomething.fun/terms
+    copyright_url: https://buildsomething.fun/terms
+    privacy_policy_url: https://buildsomething.fun/privacy
+    website: https://buildsomething.fun
   media:
     - purpose: icon
       uri: ./media/logo_dark.png
@@ -36,10 +36,10 @@ release:
       uri: ./files/app-release.apk
   catalog:
     en-US:
-      name: actions.FUN
-      short_description: Prediction markets on Solana!
-      long_description: scroll & trade prediction markets on Solana. Create your own and earn 1% fees!
-      new_in_version: Public beta made with ❤️ by @actionsdotfun for @solanamobile Hackathon
+      name: Something
+      short_description: Vibecode dApps!
+      long_description:
+      new_in_version:
 solana_mobile_dapp_publisher_portal:
-  testing_instructions: Open the app, connect your wallet and start trading! This is mainnet version, and if you want to get a test wallet, please DM us on Twitter or send us an email.
+  testing_instructions:
 
