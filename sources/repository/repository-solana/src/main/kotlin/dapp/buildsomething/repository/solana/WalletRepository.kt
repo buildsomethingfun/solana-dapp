@@ -1,0 +1,27 @@
+package dapp.buildsomething.repository.solana
+
+import dapp.buildsomething.repository.solana.internal.core.rpc.TokenAmount
+import com.solana.transaction.Transaction
+import kotlinx.coroutines.flow.Flow
+import java.math.BigInteger
+
+interface WalletRepository {
+
+    val wallet: Flow<ConnectedWallet>
+
+    suspend fun getWallet(): ConnectedWallet
+
+    suspend fun getBalance(): BigInteger?
+
+    suspend fun getTokenBalance(mint: String): TokenAmount?
+
+    suspend fun signMessage(message: ByteArray): ByteArray
+
+    suspend fun getLatestBlockhash(): String
+
+    suspend fun connectWallet()
+
+    suspend fun disconnectWallet()
+
+    suspend fun sendAndConfirmTransaction(transaction: Transaction): String
+}
