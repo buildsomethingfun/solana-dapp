@@ -2,9 +2,12 @@ package dapp.buildsomething.repository.something.di
 
 import dapp.buildsomething.common.network.backendurl.BackendUrl
 import dapp.buildsomething.repository.something.interactor.AuthInteractor
+import dapp.buildsomething.repository.something.interactor.ChatInteractor
 import dapp.buildsomething.repository.something.internal.interactor.AuthInteractorImpl
+import dapp.buildsomething.repository.something.internal.interactor.ChatInteractorImpl
 import dapp.buildsomething.repository.something.internal.api.SomethingApi
 import dapp.buildsomething.repository.something.internal.api.SomethingAuthApi
+import dapp.buildsomething.repository.something.internal.stream.UiMessageStreamParser
 import dapp.buildsomething.repository.something.internal.jwt.JwtRepository
 import dapp.buildsomething.repository.something.internal.jwt.JwtRepositoryImpl
 import dapp.buildsomething.repository.something.internal.jwt.JwtAuthenticator
@@ -28,6 +31,14 @@ val SomethingModule = module {
             walletRepository = get(),
             userRepository = get(),
             jwtRepository = get(),
+        )
+    }
+
+    single<ChatInteractor> {
+        val json = get<Json>(qualifier = StringQualifier("AppJson"))
+        ChatInteractorImpl(
+            api = get(),
+            streamParser = UiMessageStreamParser(json = json),
         )
     }
 
