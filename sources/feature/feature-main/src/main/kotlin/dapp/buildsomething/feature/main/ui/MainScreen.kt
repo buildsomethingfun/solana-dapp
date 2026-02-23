@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -28,6 +32,7 @@ import dapp.buildsomething.feature.apps.ui.AppDetailScreen
 import dapp.buildsomething.feature.apps.ui.AppsScreen
 import dapp.buildsomething.feature.main.ui.bottomnav.BottomNavBar
 import dapp.buildsomething.feature.main.ui.bottomnav.Tab
+import dapp.buildsomething.feature.main.ui.bottomnav.TabLifecycleOwner
 import dapp.buildsomething.feature.main.ui.bottomnav.TabNavigator
 import dapp.buildsomething.feature.newapp.ui.NewAppScreen
 import dapp.buildsomething.feature.profile.ui.ProfileScreen
@@ -106,17 +111,31 @@ private fun TabNavHost(
         )
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .zIndex(if (isSelected) 1f else 0f)
-            .graphicsLayer { alpha = if (isSelected) 1f else 0f },
-    ) {
-        NavHost(
-            navController = navController,
-            startDestination = tab.startDestination,
+    val parentLifecycle = LocalLifecycleOwner.current.lifecycle
+    val tabLifecycleOwner = remember { TabLifecycleOwner() }
+
+    DisposableEffect(parentLifecycle, isSelected) {
+        val observer = LifecycleEventObserver { _, _ ->
+            tabLifecycleOwner.updateState(parentLifecycle.currentState, isSelected)
+        }
+        parentLifecycle.addObserver(observer)
+        tabLifecycleOwner.updateState(parentLifecycle.currentState, isSelected)
+        onDispose { parentLifecycle.removeObserver(observer) }
+    }
+
+    CompositionLocalProvider(LocalLifecycleOwner provides tabLifecycleOwner) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .zIndex(if (isSelected) 1f else 0f)
+                .graphicsLayer { alpha = if (isSelected) 1f else 0f },
         ) {
-            tabDestinations(tab, tabNavigator)
+            NavHost(
+                navController = navController,
+                startDestination = tab.startDestination,
+            ) {
+                tabDestinations(tab, tabNavigator)
+            }
         }
     }
 }
@@ -131,7 +150,7 @@ private fun NavGraphBuilder.tabDestinations(tab: Tab, navigator: Navigator) {
                 AppDetailScreen(id = args?.id.orEmpty(), navigator = navigator)
             }
         }
-        Tab.NewApp -> destination<AppDestination.NewApp> { NewAppScreen(navigator) }
+        Tab.NewApp -> destination<AppDestination.NewApp> { NewAppScreen(navigator, koinInject()) }
         Tab.Profile -> destination<AppDestination.Profile> { ProfileScreen(navigator) }
     }
 }
