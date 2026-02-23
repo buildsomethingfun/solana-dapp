@@ -16,8 +16,7 @@ val AuthModule = module {
                     initialState = AuthState(),
                     actors = setOf(
                         ConnectWalletActor(
-                            walletRepository = get(),
-                            userRepository = get(),
+                            authInteractor = get(),
                         ),
                     ),
                     reducer = AuthReducer(),
