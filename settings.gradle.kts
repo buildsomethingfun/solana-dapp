@@ -32,6 +32,7 @@ include(
     ":sources:repository:repository-preferences",
     ":sources:repository:repository-solana",
     ":sources:repository:repository-user",
+    ":sources:repository:repository-something",
 
     ":sources:feature:feature-splash",
     ":sources:feature:feature-auth",
