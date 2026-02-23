@@ -7,11 +7,11 @@ android.namespace = "dapp.buildsomething.repository.solana"
 
 dependencies {
     api(libs.solanaWeb3)
+    api(libs.solanaMobile)
     implementation(projects.sources.repository.repositoryPreferences)
     implementation(projects.sources.repository.repositoryUser)
     implementation(projects.sources.common.commonNetwork)
     implementation(projects.sources.common.commonUtil)
-    implementation(libs.solanaMobile)
     implementation(libs.solanaRpcCore)
     implementation(libs.solanaRpcSolana)
     implementation(libs.timber)

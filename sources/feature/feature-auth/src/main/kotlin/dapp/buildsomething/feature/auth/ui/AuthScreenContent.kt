@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dapp.buildsomething.common.ui.AppPreview
+import dapp.buildsomething.common.ui.R
 import dapp.buildsomething.common.ui.components.button.PrimaryButton
 import dapp.buildsomething.common.ui.style.AppTheme
 import dapp.buildsomething.common.ui.style.Body14Regular
@@ -64,7 +65,7 @@ internal fun AuthScreenContent(
     ) {
         FloatingCube(
             transition = transition,
-            drawableRes = dapp.buildsomething.common.ui.R.drawable.ic_round_cube,
+            drawableRes = R.drawable.ic_round_cube,
             modifier = Modifier
                 .size(150.dp)
                 .offset(x = (-30).dp, y = 22.dp),
@@ -79,7 +80,7 @@ internal fun AuthScreenContent(
         )
         FloatingCube(
             transition = transition,
-            drawableRes = dapp.buildsomething.common.ui.R.drawable.ic_round_cube_2,
+            drawableRes = R.drawable.ic_round_cube_2,
             modifier = Modifier
                 .size(110.dp)
                 .offset(x = (-50).dp, y = 200.dp)
@@ -95,7 +96,7 @@ internal fun AuthScreenContent(
         )
         FloatingCube(
             transition = transition,
-            drawableRes = dapp.buildsomething.common.ui.R.drawable.ic_round_cube_3,
+            drawableRes = R.drawable.ic_round_cube_3,
             modifier = Modifier
                 .size(120.dp, 136.dp)
                 .offset(x = 40.dp, y = (-60).dp)
@@ -113,13 +114,13 @@ internal fun AuthScreenContent(
         val inlineIcon = mapOf(
             "dappStore" to InlineTextContent(
                 placeholder = Placeholder(
-                    width = 60.sp,
-                    height = 60.sp,
+                    width = 52.sp,
+                    height = 52.sp,
                     placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
                 ),
             ) {
                 Image(
-                    painter = painterResource(id = dapp.buildsomething.common.ui.R.drawable.ic_dapp_store),
+                    painter = painterResource(id = R.drawable.ic_dapp_store),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                 )
