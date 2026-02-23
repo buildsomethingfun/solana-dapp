@@ -22,10 +22,12 @@ dependencies {
 
     implementation(projects.sources.repository.repositoryUser)
     implementation(projects.sources.repository.repositorySolana)
+    implementation(projects.sources.repository.repositorySomething)
     implementation(projects.sources.repository.repositoryPreferences)
 
     implementation(projects.sources.feature.featureSplash)
     implementation(projects.sources.feature.featureAuth)
+    implementation(projects.sources.feature.featureApps)
     implementation(projects.sources.feature.featureMain)
 
     implementation(libs.androidxAppcompat)

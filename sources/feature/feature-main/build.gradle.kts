@@ -12,4 +12,5 @@ dependencies {
     implementation(projects.sources.feature.featureNewapp)
     implementation(projects.sources.feature.featureProfile)
     implementation(libs.androidxAppcompat)
+    implementation(libs.koinCompose)
 }

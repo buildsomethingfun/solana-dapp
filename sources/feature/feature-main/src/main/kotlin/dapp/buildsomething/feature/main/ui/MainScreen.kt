@@ -31,6 +31,7 @@ import dapp.buildsomething.feature.main.ui.bottomnav.Tab
 import dapp.buildsomething.feature.main.ui.bottomnav.TabNavigator
 import dapp.buildsomething.feature.newapp.ui.NewAppScreen
 import dapp.buildsomething.feature.profile.ui.ProfileScreen
+import org.koin.compose.koinInject
 
 private val DefaultTab = Tab.Apps
 
@@ -123,7 +124,9 @@ private fun TabNavHost(
 private fun NavGraphBuilder.tabDestinations(tab: Tab, navigator: Navigator) {
     when (tab) {
         Tab.Apps -> {
-            destination<AppDestination.Apps> { AppsScreen(navigator) }
+            destination<AppDestination.Apps> {
+                AppsScreen(navigator = navigator, storeProvider = koinInject())
+            }
             destination<AppDestination.AppDetail>(animate = NavAnimation.SlideRight) { args ->
                 AppDetailScreen(id = args?.id.orEmpty(), navigator = navigator)
             }

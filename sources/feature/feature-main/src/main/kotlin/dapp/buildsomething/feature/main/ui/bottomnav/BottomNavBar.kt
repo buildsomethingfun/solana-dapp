@@ -35,7 +35,7 @@ import dapp.buildsomething.common.ui.style.AppTheme
 private val PillHeight = 48.dp
 private val PillCornerRadius = 24.dp
 private val PillHorizontalPadding = 24.dp
-private val IconSize = 28.dp
+private val IconSize = 24.dp
 private val PillWidth = IconSize + PillHorizontalPadding * 2
 
 @Composable
