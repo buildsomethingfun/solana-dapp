@@ -33,11 +33,13 @@ include(
     ":sources:repository:repository-solana",
     ":sources:repository:repository-user",
     ":sources:repository:repository-something",
+    ":sources:repository:repository-onboarding",
 
     ":sources:feature:feature-splash",
     ":sources:feature:feature-auth",
     ":sources:feature:feature-main",
     ":sources:feature:feature-apps",
     ":sources:feature:feature-newapp",
+    ":sources:feature:feature-onboarding",
     ":sources:feature:feature-profile",
 )
