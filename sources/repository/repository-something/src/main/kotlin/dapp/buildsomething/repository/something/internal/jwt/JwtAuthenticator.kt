@@ -14,12 +14,17 @@ internal class JwtAuthenticator(
     private val api: SomethingAuthApi,
 ) : Authenticator {
 
-    override fun authenticate(route: Route?, response: Response): Request {
-        val authToken = tokenProvider.getToken() ?: return response.request
+    override fun authenticate(route: Route?, response: Response): Request? {
+        val authToken = tokenProvider.getToken() ?: return null
 
-        val result = runBlocking {
-            api.refreshToken(RefreshTokenRequest(authToken.refreshToken))
-        }
+        val result = runCatching {
+            runBlocking {
+                api.refreshToken(RefreshTokenRequest(authToken.refreshToken))
+            }
+        }.getOrNull() ?: return null
+
+        // Token was cleared during refresh (logout happened), don't restore it
+        if (tokenProvider.getToken() == null) return null
 
         tokenProvider.setToken(JwtToken(result.token, result.refreshToken))
 
