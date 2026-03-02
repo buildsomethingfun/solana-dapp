@@ -1,6 +1,6 @@
-package dapp.buildsomething.feature.apps.presentation.model
+package dapp.buildsomething.feature.apps.app.presentation.model
 
-import dapp.buildsomething.feature.apps.ui.AppUiModel
+import dapp.buildsomething.feature.apps.app.ui.AppUiModel
 
 internal sealed interface AppsEvent {
     data class AppsLoaded(val apps: List<AppUiModel>) : AppsEvent

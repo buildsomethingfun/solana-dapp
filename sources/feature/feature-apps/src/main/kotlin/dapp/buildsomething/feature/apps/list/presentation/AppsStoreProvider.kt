@@ -1,16 +1,16 @@
-package dapp.buildsomething.feature.apps.presentation
+package dapp.buildsomething.feature.apps.app.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dapp.buildsomething.common.arch.tea.TeaViewModel
 import dapp.buildsomething.common.arch.tea.component.Actor
 import dapp.buildsomething.common.arch.tea.component.Reducer
-import dapp.buildsomething.feature.apps.presentation.model.AppsCommand
-import dapp.buildsomething.feature.apps.presentation.model.AppsEffect
-import dapp.buildsomething.feature.apps.presentation.model.AppsEvent
-import dapp.buildsomething.feature.apps.presentation.model.AppsState
-import dapp.buildsomething.feature.apps.presentation.model.AppsUIEvent
-import dapp.buildsomething.feature.apps.ui.AppsScreenState
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsCommand
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsEffect
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsEvent
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsState
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsUIEvent
+import dapp.buildsomething.feature.apps.app.ui.AppsScreenState
 
 abstract class AppsStoreProvider {
 

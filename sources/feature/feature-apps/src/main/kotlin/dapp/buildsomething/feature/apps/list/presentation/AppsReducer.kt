@@ -1,18 +1,18 @@
-package dapp.buildsomething.feature.apps.presentation
+package dapp.buildsomething.feature.apps.app.presentation
 
 import dapp.buildsomething.common.arch.tea.dsl.DslReducer
-import dapp.buildsomething.feature.apps.presentation.model.AppsCommand as Command
-import dapp.buildsomething.feature.apps.presentation.model.AppsEffect as Effect
-import dapp.buildsomething.feature.apps.presentation.model.AppsEvent as Event
-import dapp.buildsomething.feature.apps.presentation.model.AppsState as State
-import dapp.buildsomething.feature.apps.presentation.model.AppsUIEvent as UIEvent
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsCommand as Command
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsEffect as Effect
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsEvent as Event
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsState as State
+import dapp.buildsomething.feature.apps.app.presentation.model.AppsUIEvent as UIEvent
 
 internal class AppsReducer : DslReducer<Command, Effect, Event, State>() {
 
     override fun reduce(event: Event) {
         when (event) {
             is UIEvent.LoadApps -> {
-                state { copy(isLoading = true, error = null) }
+                state { copy(isLoading = state.apps.isEmpty(), error = null) }
                 commands(Command.LoadApps)
             }
             is Event.AppsLoaded -> {

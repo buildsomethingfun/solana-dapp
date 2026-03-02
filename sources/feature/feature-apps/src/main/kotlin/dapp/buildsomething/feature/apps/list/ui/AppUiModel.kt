@@ -1,4 +1,4 @@
-package dapp.buildsomething.feature.apps.ui
+package dapp.buildsomething.feature.apps.app.ui
 
 internal data class AppUiModel(
     val id: String,
