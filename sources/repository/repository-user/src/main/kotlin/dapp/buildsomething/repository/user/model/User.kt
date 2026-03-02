@@ -9,6 +9,8 @@ import java.util.UUID
 data class User(
     val id: String,
     val anonymous: Boolean,
+    val name: String = "",
+    val email: String = "",
 ) {
     companion object {
 
