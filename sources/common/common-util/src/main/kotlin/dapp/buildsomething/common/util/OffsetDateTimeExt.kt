@@ -1,7 +1,10 @@
 package dapp.buildsomething.common.util
 
 import java.time.Duration
+import java.time.Instant
 import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import kotlin.math.abs
 
 fun OffsetDateTime.timeLeftString(): String {
@@ -14,13 +17,18 @@ fun OffsetDateTime.timeLeftString(): String {
             val hours = absDuration.toHours()
             val minutes = absDuration.toMinutesPart()
             val seconds = absDuration.toSecondsPart()
-            "-${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
+            "-${hours.toString().padStart(2, '0')}:${
+                minutes.toString().padStart(2, '0')
+            }:${seconds.toString().padStart(2, '0')}"
         }
+
         else -> {
             val hours = duration.toHours()
             val minutes = duration.toMinutesPart()
             val seconds = duration.toSecondsPart()
-            "${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
+            "${hours.toString().padStart(2, '0')}:${
+                minutes.toString().padStart(2, '0')
+            }:${seconds.toString().padStart(2, '0')}"
         }
     }
 }
@@ -37,21 +45,32 @@ fun OffsetDateTime.timeRelativeString(): String {
             val minutes = absSeconds / 60
             if (seconds > 0) "${minutes}m ago" else "in ${minutes}m"
         }
+
         absSeconds < 86400 -> {
             val hours = absSeconds / 3600
             if (seconds > 0) "${hours}hr ago" else "in ${hours}hr"
         }
+
         absSeconds < 2592000 -> {
             val days = absSeconds / 86400
             if (seconds > 0) "${days}d ago" else "in ${days}d"
         }
+
         absSeconds < 31536000 -> {
             val months = absSeconds / 2592000
             if (seconds > 0) "${months}mo ago" else "in ${months}mo"
         }
+
         else -> {
             val years = absSeconds / 31536000
             if (seconds > 0) "${years}yr ago" else "in ${years}yr"
         }
     }
 }
+
+private val dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy")
+
+val Long.formatTimestamp: String
+    get() = Instant.ofEpochSecond(this)
+        .atZone(ZoneId.systemDefault())
+        .format(dateFormatter)
