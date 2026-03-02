@@ -3,7 +3,7 @@ package dapp.buildsomething.repository.something.internal.jwt
 import dapp.buildsomething.repository.something.internal.jwt.model.JwtToken
 import kotlinx.coroutines.flow.Flow
 
-internal interface JwtRepository {
+interface JwtRepository {
 
     fun getToken(): JwtToken?
 
