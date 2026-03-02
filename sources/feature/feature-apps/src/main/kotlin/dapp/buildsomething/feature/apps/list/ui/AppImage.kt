@@ -1,4 +1,4 @@
-package dapp.buildsomething.feature.apps.ui
+package dapp.buildsomething.feature.apps.app.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
