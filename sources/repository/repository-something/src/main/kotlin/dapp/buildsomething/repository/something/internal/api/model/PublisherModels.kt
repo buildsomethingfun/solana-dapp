@@ -20,6 +20,13 @@ data class UpdatePublisherResponse(
 )
 
 @Serializable
+data class CreatePublisherNftRequest(
+    val publisherName: String,
+    val publisherWebsite: String,
+    val publisherEmail: String,
+)
+
+@Serializable
 data class PublisherResponse(
     val id: String,
     val walletAddress: String,
