@@ -44,14 +44,21 @@ internal class ChatInteractorImpl(
             when (chunk) {
                 is UiMessageStreamChunk.TextDelta -> state.copy(text = state.text + chunk.delta)
 
+                is UiMessageStreamChunk.ToolInputStart -> {
+                    if (state.tools.any { it.id == chunk.toolCallId }) {
+                        state
+                    } else {
+                        state.copy(
+                            tools = state.tools + ChatToolCall(
+                                id = chunk.toolCallId,
+                                name = chunk.toolName,
+                            ),
+                        )
+                    }
+                }
+
                 is UiMessageStreamChunk.ToolInputAvailable -> {
-                    state.copy(
-                        tools = state.tools + ChatToolCall(
-                            id = chunk.toolCallId,
-                            name = chunk.toolName,
-                            input = chunk.input,
-                        ),
-                    )
+                    state.updateTool(chunk.toolCallId) { copy(input = chunk.input) }
                 }
 
                 is UiMessageStreamChunk.ToolOutputAvailable -> {
