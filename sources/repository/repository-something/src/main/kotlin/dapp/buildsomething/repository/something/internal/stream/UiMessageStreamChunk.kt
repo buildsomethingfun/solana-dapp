@@ -1,6 +1,7 @@
 package dapp.buildsomething.repository.something.internal.stream
 
-import kotlinx.serialization.json.JsonElement
+import dapp.buildsomething.repository.something.interactor.model.ToolInput
+import dapp.buildsomething.repository.something.interactor.model.ToolOutput
 
 internal sealed interface UiMessageStreamChunk {
 
@@ -51,12 +52,12 @@ internal sealed interface UiMessageStreamChunk {
     data class ToolInputAvailable(
         val toolCallId: String,
         val toolName: String,
-        val input: JsonElement,
+        val input: ToolInput,
     ) : UiMessageStreamChunk
 
     data class ToolOutputAvailable(
         val toolCallId: String,
-        val output: JsonElement,
+        val output: ToolOutput,
     ) : UiMessageStreamChunk
 
     data class ToolOutputError(
