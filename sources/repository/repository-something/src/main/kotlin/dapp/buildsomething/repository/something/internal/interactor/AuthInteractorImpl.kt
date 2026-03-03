@@ -70,8 +70,6 @@ internal class AuthInteractorImpl(
         )
     }.onSuccess { response ->
         jwtRepository.setToken(JwtToken(response.token, response.refreshToken))
-        userRepository.update {
-            User(id = response.user.id, anonymous = false)
-        }
+        userRepository.update { User(id = response.user.id, anonymous = false) }
     }
 }
