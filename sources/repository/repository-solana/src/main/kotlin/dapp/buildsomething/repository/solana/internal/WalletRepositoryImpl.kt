@@ -21,6 +21,7 @@ import dapp.buildsomething.repository.solana.internal.core.rpc.TokenAmount
 import dapp.buildsomething.repository.solana.internal.wallet.ConnectedWalletPreference
 import dapp.buildsomething.repository.solana.internal.wallet.MobileWalletAdapterWrapper
 import dapp.buildsomething.repository.user.UserRepository
+import android.util.Base64
 import com.solana.transaction.Transaction
 import java.math.BigInteger
 
@@ -131,6 +132,16 @@ internal class WalletRepositoryImpl(
         return withContext(Dispatchers.IO) {
             val signatures = mobileWalletAdapter.signAndSendTransactions(
                 transactions = arrayOf(transaction.serialize())
+            )
+            signatures.firstOrNull() ?: error("No transaction signature returned")
+        }
+    }
+
+    override suspend fun signAndSendSerializedTransaction(base64Transaction: String): String {
+        return withContext(Dispatchers.IO) {
+            val txBytes = Base64.decode(base64Transaction, Base64.DEFAULT)
+            val signatures = mobileWalletAdapter.signAndSendTransactions(
+                transactions = arrayOf(txBytes)
             )
             signatures.firstOrNull() ?: error("No transaction signature returned")
         }
