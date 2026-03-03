@@ -24,4 +24,6 @@ interface WalletRepository {
     suspend fun disconnectWallet()
 
     suspend fun sendAndConfirmTransaction(transaction: Transaction): String
+
+    suspend fun signAndSendSerializedTransaction(base64Transaction: String): String
 }
