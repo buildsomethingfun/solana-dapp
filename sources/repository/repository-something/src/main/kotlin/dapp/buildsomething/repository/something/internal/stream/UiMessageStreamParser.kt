@@ -1,12 +1,17 @@
 package dapp.buildsomething.repository.something.internal.stream
 
+import dapp.buildsomething.repository.something.interactor.model.ToolInput
+import dapp.buildsomething.repository.something.interactor.model.ToolOutput
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.ResponseBody
@@ -71,14 +76,18 @@ internal class UiMessageStreamParser(
                 toolCallId = obj.string("toolCallId") ?: return null,
                 inputTextDelta = obj.string("inputTextDelta") ?: return null,
             )
-            "tool-input-available" -> UiMessageStreamChunk.ToolInputAvailable(
-                toolCallId = obj.string("toolCallId") ?: return null,
-                toolName = obj.string("toolName") ?: return null,
-                input = obj["input"] ?: return null,
-            )
+            "tool-input-available" -> {
+                val toolName = obj.string("toolName") ?: return null
+                val inputJson = obj["input"]?.jsonObject ?: return null
+                UiMessageStreamChunk.ToolInputAvailable(
+                    toolCallId = obj.string("toolCallId") ?: return null,
+                    toolName = toolName,
+                    input = parseToolInput(toolName, inputJson),
+                )
+            }
             "tool-output-available" -> UiMessageStreamChunk.ToolOutputAvailable(
                 toolCallId = obj.string("toolCallId") ?: return null,
-                output = obj["output"] ?: return null,
+                output = parseToolOutput(obj["output"] ?: return null),
             )
             "tool-output-error" -> UiMessageStreamChunk.ToolOutputError(
                 toolCallId = obj.string("toolCallId") ?: return null,
@@ -91,6 +100,43 @@ internal class UiMessageStreamParser(
             )
             else -> null
         }
+    }
+
+    private fun parseToolInput(toolName: String, input: JsonObject): ToolInput {
+        return when (toolName) {
+            "createFile" -> ToolInput.CreateFile(
+                filePath = input.string("filePath") ?: input.string("path"),
+                content = input.string("content").orEmpty(),
+            )
+            "readFile" -> ToolInput.ReadFile(
+                filePath = input.string("filePath") ?: input.string("path").orEmpty(),
+            )
+            "createSchema" -> ToolInput.CreateSchema(
+                sql = input.string("sql") ?: input.string("content").orEmpty(),
+            )
+            "listFiles" -> ToolInput.ListFiles
+            "deployPreview" -> ToolInput.DeployPreview
+            else -> ToolInput.Unknown(input.toString())
+        }
+    }
+
+    private fun parseToolOutput(output: JsonElement): ToolOutput {
+        val obj = output as? JsonObject
+        val created = obj?.string("created")
+        if (created != null) return ToolOutput.FileCreated(created)
+
+        val files = (obj?.get("files") as? JsonArray)
+            ?.mapNotNull { it.jsonPrimitive.contentOrNull }
+        if (files != null) return ToolOutput.FileList(files)
+
+        val url = obj?.string("url")
+        val deployedFiles = (obj?.get("deployedFiles") as? JsonArray)
+            ?.mapNotNull { it.jsonPrimitive.contentOrNull }
+        if (url != null || deployedFiles != null) {
+            return ToolOutput.DeployResult(url = url, deployedFiles = deployedFiles.orEmpty())
+        }
+
+        return ToolOutput.Unknown(output.toString())
     }
 
     private companion object {
