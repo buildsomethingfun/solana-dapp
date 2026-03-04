@@ -26,9 +26,16 @@ internal class SplashReducer : DslReducer<Command, Effect, Event, State>() {
         when (event) {
             is Event.AuthStateLoaded -> {
                 if (event.isAuthenticated) {
-                    effects(Effect.OpenHome)
+                    commands(Command.CheckOnboardingStatus)
                 } else {
                     effects(Effect.OpenOnboarding)
+                }
+            }
+            is Event.OnboardingStatusLoaded -> {
+                if (event.needsOnboarding) {
+                    effects(Effect.OpenProfileOnboarding)
+                } else {
+                    effects(Effect.OpenHome)
                 }
             }
             else -> Unit
