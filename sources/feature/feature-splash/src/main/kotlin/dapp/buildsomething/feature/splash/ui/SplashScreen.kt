@@ -37,6 +37,12 @@ fun SplashScreen(
                     +NavigationOption.SingleTop
                 }
             }
+            is SplashEffect.OpenProfileOnboarding -> {
+                navigator.open(AppDestination.Onboarding) {
+                    +NavigationOption.ClearStack
+                    +NavigationOption.SingleTop
+                }
+            }
         }
     }
 
