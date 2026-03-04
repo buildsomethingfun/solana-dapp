@@ -12,6 +12,7 @@ dependencies {
     implementation(projects.sources.common.commonArch)
     implementation(projects.sources.common.commonNavigation)
     implementation(projects.sources.repository.repositoryUser)
+    implementation(projects.sources.repository.repositorySomething)
     implementation(libs.androidxAppcompat)
     implementation(libs.timber)
     implementation(libs.koinAndroid)
