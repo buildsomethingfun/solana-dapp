@@ -25,6 +25,12 @@ sealed interface AppDestination : Destination {
     data object NewApp : AppDestination, Destination.Screen
 
     @Serializable
+    data class EditApp(val appId: String, val appName: String) : AppDestination, Destination.Screen
+
+    @Serializable
+    data object Onboarding : AppDestination, Destination.Screen
+
+    @Serializable
     data object Profile : AppDestination, Destination.Screen
 
     @Serializable
