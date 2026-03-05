@@ -11,14 +11,24 @@ internal class TabNavigator(
     override val activity: AppCompatActivity,
     private val tabNavController: NavController,
     private val globalNavigator: Navigator,
+    private val onSwitchTab: (Tab) -> Unit,
 ) : Navigator {
 
     override fun open(destination: Destination, options: NavigationBuilder.() -> Unit) {
         when (destination) {
             is Destination.Screen -> {
-                tabNavController.navigate(destination) {
-                    val config = NavigationBuilder().apply(options)
-                    launchSingleTop = true
+                try {
+                    tabNavController.navigate(destination) {
+                        val config = NavigationBuilder().apply(options)
+                        launchSingleTop = true
+                    }
+                } catch (_: IllegalArgumentException) {
+                    val targetTab = Tab.entries.find { it.startDestination == destination }
+                    if (targetTab != null) {
+                        onSwitchTab(targetTab)
+                    } else {
+                        globalNavigator.open(destination, options)
+                    }
                 }
             }
             else -> globalNavigator.open(destination, options)
