@@ -4,7 +4,12 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -28,8 +33,8 @@ import dapp.buildsomething.common.navigation.core.NavAnimation
 import dapp.buildsomething.common.navigation.core.Navigator
 import dapp.buildsomething.common.navigation.core.destination
 import dapp.buildsomething.common.ui.style.AppTheme
-import dapp.buildsomething.feature.apps.ui.AppDetailScreen
-import dapp.buildsomething.feature.apps.ui.AppsScreen
+import dapp.buildsomething.feature.apps.details.ui.AppDetailScreen
+import dapp.buildsomething.feature.apps.list.ui.AppsScreen
 import dapp.buildsomething.feature.main.ui.bottomnav.BottomNavBar
 import dapp.buildsomething.feature.main.ui.bottomnav.Tab
 import dapp.buildsomething.feature.main.ui.bottomnav.TabLifecycleOwner
@@ -56,10 +61,13 @@ fun MainScreen(navigator: Navigator) {
         )
     }
 
+    val density = LocalDensity.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppTheme.Colors.Background.Primary),
+            .background(AppTheme.Colors.Background.Primary)
+            .imePadding(),
     ) {
         Box(modifier = Modifier.weight(1f)) {
             Tab.entries.forEach { tab ->
@@ -69,14 +77,24 @@ fun MainScreen(navigator: Navigator) {
                         isSelected = tab == selectedTab,
                         navController = navControllers.getValue(tab),
                         globalNavigator = navigator,
+                        onSwitchTab = { selectedTab = it },
                     )
                 }
             }
         }
 
+        val imeBottom = WindowInsets.ime.getBottom(density)
+
         BottomNavBar(
             selectedTab = selectedTab,
             onTabSelected = { selectedTab = it },
+            modifier = Modifier.layout { measurable, constraints ->
+                val placeable = measurable.measure(constraints)
+                val visibleHeight = (placeable.height - imeBottom).coerceAtLeast(0)
+                layout(placeable.width, visibleHeight) {
+                    placeable.place(0, 0)
+                }
+            },
         )
     }
 
@@ -102,12 +120,14 @@ private fun TabNavHost(
     isSelected: Boolean,
     navController: NavHostController,
     globalNavigator: Navigator,
+    onSwitchTab: (Tab) -> Unit,
 ) {
-    val tabNavigator = remember(navController, globalNavigator) {
+    val tabNavigator = remember(navController, globalNavigator, onSwitchTab) {
         TabNavigator(
             activity = globalNavigator.activity,
             tabNavController = navController,
             globalNavigator = globalNavigator,
+            onSwitchTab = onSwitchTab,
         )
     }
 
@@ -144,13 +164,28 @@ private fun NavGraphBuilder.tabDestinations(tab: Tab, navigator: Navigator) {
     when (tab) {
         Tab.Apps -> {
             destination<AppDestination.Apps> {
-                AppsScreen(navigator = navigator, storeProvider = koinInject())
+                AppsScreen(
+                    navigator = navigator,
+                    storeProvider = koinInject()
+                )
             }
             destination<AppDestination.AppDetail>(animate = NavAnimation.SlideRight) { args ->
-                AppDetailScreen(id = args?.id.orEmpty(), navigator = navigator)
+                AppDetailScreen(
+                    id = args?.id.orEmpty(),
+                    navigator = navigator,
+                    storeProvider = koinInject()
+                )
+            }
+            destination<AppDestination.EditApp>(animate = NavAnimation.SlideRight) { args ->
+                NewAppScreen(
+                    navigator = navigator,
+                    storeProvider = koinInject(),
+                    appId = args?.appId,
+                    appName = args?.appName,
+                )
             }
         }
         Tab.NewApp -> destination<AppDestination.NewApp> { NewAppScreen(navigator, koinInject()) }
-        Tab.Profile -> destination<AppDestination.Profile> { ProfileScreen(navigator) }
+        Tab.Profile -> destination<AppDestination.Profile> { ProfileScreen(navigator, koinInject()) }
     }
 }
