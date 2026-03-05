@@ -34,6 +34,12 @@ fun AuthScreen(
                     +NavigationOption.SingleTop
                 }
             }
+            is AuthEffect.NavigateToOnboarding -> {
+                navigator.open(AppDestination.Onboarding) {
+                    +NavigationOption.ClearStack
+                    +NavigationOption.SingleTop
+                }
+            }
             is AuthEffect.ShowError -> {
                 navigator.open(AppDestination.ErrorToast(effect.message))
             }
