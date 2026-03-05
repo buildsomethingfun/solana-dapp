@@ -42,9 +42,10 @@ private val PillWidth = IconSize + PillHorizontalPadding * 2
 internal fun BottomNavBar(
     selectedTab: Tab,
     onTabSelected: (Tab) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(AppTheme.Colors.Background.Surface),
     ) {
