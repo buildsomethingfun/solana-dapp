@@ -16,8 +16,15 @@ internal class AuthReducer : DslReducer<Command, Effect, Event, State>() {
                 commands(Command.ConnectWallet)
             }
             is Event.AuthSuccess -> {
+                commands(Command.CheckOnboardingStatus)
+            }
+            is Event.OnboardingStatusLoaded -> {
                 state { copy(isLoading = false) }
-                effects(Effect.NavigateToHome)
+                if (event.needsOnboarding) {
+                    effects(Effect.NavigateToOnboarding)
+                } else {
+                    effects(Effect.NavigateToHome)
+                }
             }
             is Event.AuthFailed -> {
                 state { copy(isLoading = false) }
