@@ -1,5 +1,6 @@
-package dapp.buildsomething.feature.apps.app.ui
+package dapp.buildsomething.feature.apps.list.ui
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,13 +13,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,12 +70,17 @@ private fun AppsLoading() {
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Box(
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-                .size(width = 80.dp, height = 28.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(AppTheme.Colors.Background.Tertiary),
-        )
+            modifier = Modifier.height(56.dp),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(width = 80.dp, height = 28.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(AppTheme.Colors.Background.Tertiary),
+            )
+        }
+
         repeat(5) {
             AppItemSkeleton()
         }
@@ -178,21 +189,45 @@ private fun AppsContent(
     apps: List<AppUiModel>,
     onAppClick: (String) -> Unit,
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+    val listState = rememberLazyListState()
+    val isScrolled by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0 } }
+    val dividerAlpha by animateFloatAsState(if (isScrolled) 1f else 0f, label = "toolbar_divider")
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
     ) {
-        item {
+        Box(
+            modifier = Modifier.height(56.dp)
+                .padding(horizontal = 24.dp),
+            contentAlignment = Alignment.CenterStart,
+        ) {
             Text(
-                text = "Apps",
+                text = "My dApps (${apps.size})",
                 style = Heading3,
                 color = AppTheme.Colors.Text.Primary,
-                modifier = Modifier.padding(bottom = 8.dp),
             )
         }
-        items(apps, key = { it.id }) { app ->
-            AppItem(app = app, onViewClick = { onAppClick(app.id) })
+
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = AppTheme.Colors.Border.Primary.copy(alpha = dividerAlpha),
+        )
+
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            items(apps, key = { it.id }) { app ->
+                AppItem(
+                    app = app,
+                    onViewClick = { onAppClick(app.id) },
+                    modifier = Modifier.animateItem(),
+                )
+            }
         }
     }
 }
@@ -201,8 +236,9 @@ private fun AppsContent(
 private fun AppItem(
     app: AppUiModel,
     onViewClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column {
+    Column(modifier = modifier) {
         Row(modifier = Modifier.fillMaxWidth()) {
             AppImage(imageUrl = app.imageUrl)
             Spacer(modifier = Modifier.width(12.dp))
@@ -222,10 +258,10 @@ private fun AppItem(
                     text = "View",
                     onClick = onViewClick,
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                HorizontalDivider(thickness = 1.dp, color = AppTheme.Colors.Border.Primary)
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        HorizontalDivider(thickness = 1.dp, color = AppTheme.Colors.Border.Primary)
     }
 }
 
