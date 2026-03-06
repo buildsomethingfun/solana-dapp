@@ -1,8 +1,8 @@
-package dapp.buildsomething.feature.apps.app.presentation
+package dapp.buildsomething.feature.apps.list.presentation
 
 import dapp.buildsomething.common.arch.tea.component.UiStateMapper
-import dapp.buildsomething.feature.apps.app.presentation.model.AppsState
-import dapp.buildsomething.feature.apps.app.ui.AppsScreenState
+import dapp.buildsomething.feature.apps.list.presentation.model.AppsState
+import dapp.buildsomething.feature.apps.list.ui.AppsScreenState
 
 internal class AppsUiStateMapper : UiStateMapper<AppsState, AppsScreenState> {
 
