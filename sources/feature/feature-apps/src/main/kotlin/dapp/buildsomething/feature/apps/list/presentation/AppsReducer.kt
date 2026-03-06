@@ -1,11 +1,11 @@
-package dapp.buildsomething.feature.apps.app.presentation
+package dapp.buildsomething.feature.apps.list.presentation
 
 import dapp.buildsomething.common.arch.tea.dsl.DslReducer
-import dapp.buildsomething.feature.apps.app.presentation.model.AppsCommand as Command
-import dapp.buildsomething.feature.apps.app.presentation.model.AppsEffect as Effect
-import dapp.buildsomething.feature.apps.app.presentation.model.AppsEvent as Event
-import dapp.buildsomething.feature.apps.app.presentation.model.AppsState as State
-import dapp.buildsomething.feature.apps.app.presentation.model.AppsUIEvent as UIEvent
+import dapp.buildsomething.feature.apps.list.presentation.model.AppsCommand as Command
+import dapp.buildsomething.feature.apps.list.presentation.model.AppsEffect as Effect
+import dapp.buildsomething.feature.apps.list.presentation.model.AppsEvent as Event
+import dapp.buildsomething.feature.apps.list.presentation.model.AppsState as State
+import dapp.buildsomething.feature.apps.list.presentation.model.AppsUIEvent as UIEvent
 
 internal class AppsReducer : DslReducer<Command, Effect, Event, State>() {
 
