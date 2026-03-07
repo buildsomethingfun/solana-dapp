@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dapp.buildsomething.common.ui.AppPreview
 import dapp.buildsomething.common.ui.R
@@ -49,8 +51,6 @@ fun OutlineIconButton(
         )
     }
 }
-
-// region SecondaryButton
 
 @Composable
 fun SecondaryButton(
@@ -123,10 +123,6 @@ fun SecondaryButton(
     }
 }
 
-// endregion
-
-// region AppTextButton
-
 @Composable
 fun AppTextButton(
     text: String,
@@ -175,10 +171,6 @@ fun AppTextButton(
     }
 }
 
-// endregion
-
-// region PillButton
-
 enum class PillButtonStyle {
     Primary,
     Outline,
@@ -192,6 +184,7 @@ fun PillButton(
     modifier: Modifier = Modifier,
     style: PillButtonStyle = PillButtonStyle.Dark,
     enabled: Boolean = true,
+    loading: Boolean = false,
     @DrawableRes iconStart: Int? = null,
     @DrawableRes iconEnd: Int? = null,
 ) {
@@ -219,57 +212,67 @@ fun PillButton(
         Modifier
     }
 
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .height(36.dp)
-            .then(borderModifier),
-        enabled = enabled,
-        shape = RoundedCornerShape(48.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
-            contentColor = contentColor,
-            disabledContainerColor = containerColor.copy(alpha = 0.5f),
-            disabledContentColor = contentColor.copy(alpha = 0.5f),
-        ),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        elevation = ButtonDefaults.buttonElevation(
-            defaultElevation = 0.dp,
-            pressedElevation = 0.dp,
-            hoveredElevation = 0.dp,
-            focusedElevation = 0.dp,
-        ),
-    ) {
-        iconStart?.let { icon ->
-            Icon(
-                modifier = Modifier.size(16.dp),
-                painter = painterResource(id = icon),
-                tint = contentColor,
-                contentDescription = null,
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-        }
+    CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
+        Button(
+            onClick = onClick,
+            modifier = modifier
+                .height(36.dp)
+                .then(borderModifier),
+            enabled = enabled && !loading,
+            shape = RoundedCornerShape(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = containerColor,
+                contentColor = contentColor,
+                disabledContainerColor = if (style == PillButtonStyle.Outline) Color.Transparent else containerColor.copy(alpha = 0.5f),
+                disabledContentColor = contentColor.copy(alpha = 0.5f),
+            ),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+                hoveredElevation = 0.dp,
+                focusedElevation = 0.dp,
+            ),
+        ) {
+            if (loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(16.dp),
+                    color = contentColor,
+                    strokeWidth = 2.dp,
+                )
+            } else {
+                iconStart?.let { icon ->
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        painter = painterResource(id = icon),
+                        tint = contentColor,
+                        contentDescription = null,
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                }
 
-        Text(
-            text = text,
-            style = Body14SemiBold,
-            color = contentColor,
-            textAlign = TextAlign.Center,
-        )
+                Text(
+                    text = text,
+                    style = Body14SemiBold,
+                    color = contentColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center,
+                )
 
-        iconEnd?.let { icon ->
-            Spacer(modifier = Modifier.width(6.dp))
-            Icon(
-                modifier = Modifier.size(16.dp),
-                painter = painterResource(id = icon),
-                tint = contentColor,
-                contentDescription = null,
-            )
+                iconEnd?.let { icon ->
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        painter = painterResource(id = icon),
+                        tint = contentColor,
+                        contentDescription = null,
+                    )
+                }
+            }
         }
     }
 }
-
-// endregion
 
 @AppPreview
 @Composable
