@@ -5,10 +5,14 @@ import dapp.buildsomething.common.network.di.CommonNetworkModule
 import dapp.buildsomething.di.AppModule
 import dapp.buildsomething.feature.apps.di.AppsModule
 import dapp.buildsomething.feature.auth.di.AuthModule
+import dapp.buildsomething.feature.onboarding.di.OnboardingModule
+import dapp.buildsomething.feature.profile.di.ProfileModule
+import dapp.buildsomething.feature.newapp.di.NewAppModule
 import dapp.buildsomething.feature.splash.di.SplashModule
 import dapp.buildsomething.repository.preferences.di.AppPreferencesModule
 import dapp.buildsomething.repository.solana.di.SolanaModule
 import dapp.buildsomething.repository.something.di.SomethingModule
+import dapp.buildsomething.repository.onboarding.di.OnboardingRepositoryModule
 import dapp.buildsomething.repository.user.di.UserRepositoryModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -39,9 +43,13 @@ class Application : Application() {
                 SolanaModule,
                 SomethingModule,
                 UserRepositoryModule,
+                OnboardingRepositoryModule,
                 SplashModule,
                 AuthModule,
+                OnboardingModule,
                 AppsModule,
+                NewAppModule,
+                ProfileModule,
             )
         }
     }
