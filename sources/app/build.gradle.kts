@@ -24,11 +24,15 @@ dependencies {
     implementation(projects.sources.repository.repositorySolana)
     implementation(projects.sources.repository.repositorySomething)
     implementation(projects.sources.repository.repositoryPreferences)
+    implementation(projects.sources.repository.repositoryOnboarding)
 
     implementation(projects.sources.feature.featureSplash)
     implementation(projects.sources.feature.featureAuth)
     implementation(projects.sources.feature.featureApps)
+    implementation(projects.sources.feature.featureNewapp)
     implementation(projects.sources.feature.featureMain)
+    implementation(projects.sources.feature.featureOnboarding)
+    implementation(projects.sources.feature.featureProfile)
 
     implementation(libs.androidxAppcompat)
     implementation(libs.androidxActivityKtx)
